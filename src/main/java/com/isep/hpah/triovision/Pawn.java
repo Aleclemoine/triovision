@@ -13,4 +13,8 @@ public class Pawn {
 	public enum PawnColor {
 		RED, BLUE, YELLOW, GREEN;
 	}
+	
+	public boolean isAtTheSamePlace(Coordonate newCoordonate) {
+		return this.getCoordonate().equals(newCoordonate);
+	}
 }

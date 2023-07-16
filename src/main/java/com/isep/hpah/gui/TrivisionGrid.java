@@ -3,11 +3,13 @@ package com.isep.hpah.gui;
 import java.util.List;
 
 import com.isep.hpah.triovision.Card;
+import com.isep.hpah.triovision.Coordonate;
 import com.isep.hpah.triovision.Pawn;
 import com.isep.hpah.triovision.Player;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.GridPane;
@@ -25,8 +27,8 @@ public class TrivisionGrid {
 
 	private List<Pawn> pawns;
 	
+	private double orgSceneX, orgSceneY;
 	
-
 	public Pane createDisplay(List<Player> players, List<Pawn> pawns) {
 		
 		VBox p1Box = new VBox();
@@ -47,7 +49,9 @@ public class TrivisionGrid {
 		
 		
 		VBox gridWrapper = new VBox();
+		gridWrapper.setPrefSize(425, 425);
 		GridPane grid = new GridPane();
+		grid.setPrefSize(425, 425);
 		grid.setPadding(new Insets(BUTTON_PADDING));
 		grid.setHgap(BUTTON_PADDING);
 		grid.setVgap(BUTTON_PADDING);
@@ -78,15 +82,54 @@ public class TrivisionGrid {
 	
 	public void displayCard(GridPane grid, List<Card> cards) {
 		for (Pawn p : cards.get(0).getPawns()) {
-			grid.add(new Circle(25, Paint.valueOf(p.getColor().toString())), p.getCoordonate().getX(),
-					p.getCoordonate().getY());
+			Circle circle = new Circle(25, Paint.valueOf(p.getColor().toString()));
+			grid.add(circle, p.getCoordonate().getX(), p.getCoordonate().getY());
 		}
 	}
 	
 	public void displayGrid(GridPane grid, List<Pawn> pawns) {
 		for (Pawn p : pawns) {
-			grid.add(new Circle(50, Paint.valueOf(p.getColor().toString())), p.getCoordonate().getX(),
-					p.getCoordonate().getY());
+			Circle circle = new Circle(50, Paint.valueOf(p.getColor().toString()));
+			circle.setCursor(Cursor.HAND);
+
+			circle.setOnMousePressed((t) -> {
+				orgSceneX = t.getSceneX();
+				orgSceneY = t.getSceneY();
+
+				Circle c = (Circle) (t.getSource());
+				c.toFront();
+			});
+			circle.setOnMouseReleased((t) -> {
+				double offsetX = t.getSceneX() - orgSceneX;
+				double offsetY = t.getSceneY() - orgSceneY;
+
+				System.out.println("offsetX : " + Math.round(offsetX/100));
+				System.out.println("offsetY : " + Math.round(offsetY/100));
+				
+				Circle c = (Circle) (t.getSource());
+
+				int newX = (int) (p.getCoordonate().getX()+ Math.round(offsetX/100));
+				int newY = (int) (p.getCoordonate().getY()+ Math.round(offsetY/100));
+				Coordonate newCoordonate = Coordonate.builder().x(newX).y(newY).build();
+				boolean isPawnAtTheSamePlace = false;
+				for (Pawn p2 : pawns) {
+					if (p2.isAtTheSamePlace(newCoordonate)) {
+						isPawnAtTheSamePlace = true;
+						break;
+					}
+				}
+				if (!isPawnAtTheSamePlace) {
+					p.getCoordonate().setX(newX);
+					p.getCoordonate().setY(newY);
+					
+					grid.getChildren().remove(c);
+					grid.add(c, p.getCoordonate().getX(),p.getCoordonate().getY());
+					// TODO: check if anyOne win
+				} else {
+					// TODO: Message "You must do a valid move !"
+				}
+			});
+			grid.add(circle, p.getCoordonate().getX(), p.getCoordonate().getY());
 		}
 	}
 }

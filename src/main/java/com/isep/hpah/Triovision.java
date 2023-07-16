@@ -29,7 +29,6 @@ public class Triovision extends Application {
 		
 		stage.setScene(new Scene(g.createDisplay(players, pawns)));
 	    stage.show();
-		
 	}
 	
 	public static void main(String[] args) {
