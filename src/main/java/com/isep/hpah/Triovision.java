@@ -8,6 +8,7 @@ import com.isep.hpah.triovision.Card;
 import com.isep.hpah.triovision.Coordonate;
 import com.isep.hpah.triovision.Pawn;
 import com.isep.hpah.triovision.Pawn.PawnColor;
+import com.isep.hpah.triovision.Player;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -17,15 +18,16 @@ public class Triovision extends Application {
 
 	private List<Pawn> pawns;
 	
-	private List<Card> cards;
+	private List<Player> players;
 	
 	@Override
 	public void start(Stage stage) throws Exception {
 		TrivisionGrid g = new TrivisionGrid();
 		
+		initPlayers();
 		initPawns();
 		
-		stage.setScene(new Scene(g.createDisplay(pawns)));
+		stage.setScene(new Scene(g.createDisplay(players, pawns)));
 	    stage.show();
 		
 	}
@@ -46,10 +48,21 @@ public class Triovision extends Application {
 		pawns.add(Pawn.builder().color(PawnColor.BLUE).coordonate(Coordonate.builder().x(2).y(3).build()).build());
 	}
 	
-	public void initCards() {
-		cards = new ArrayList<>();
-		for (int i = 0; i < 12; i++) {
+	public void initPlayers() {
+		players = new ArrayList<>();
+		for (int i = 0; i < 2; i++) {
+			Player p = new Player();
+			initCards(p);
+			players.add(p);
+		}
+	}
+	
+	
+	private void initCards(Player p) {
+		List<Card> cards = new ArrayList<>();
+		for (int i = 0; i < 6; i++) {
 			cards.add(new Card());
 		}
+		p.setCards(cards);
 	}
 }

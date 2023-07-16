@@ -21,7 +21,7 @@ public class Card {
 		int index = 1;
 		for (PawnColor pc : PawnColor.values()) {
 			if (index++ == choice) {
-				pawns.add(Pawn.builder().color(pc).coordonate(Coordonate.builder().x(0).y(0).build()).build());
+				pawns.add(Pawn.builder().color(pc).coordonate(Coordonate.builder().x(1).y(0).build()).build());
 			}
 		}
 		
@@ -29,15 +29,16 @@ public class Card {
 		index = 1;
 		for (PawnColor pc : PawnColor.values()) {
 			if (index++ == choice) {
-				pawns.add(Pawn.builder().color(pc).coordonate(Coordonate.builder().x(0).y(-1).build()).build());
+				pawns.add(Pawn.builder().color(pc).coordonate(Coordonate.builder().x(1).y(1).build()).build());
 			}
 		}
 		
 		choice = rn.nextInt(PawnColor.values().length) + 1;
+		int abs = rn.nextInt(2)+1;
 		index = 1;
 		for (PawnColor pc : PawnColor.values()) {
 			if (index++ == choice) {
-				pawns.add(Pawn.builder().color(pc).coordonate(Coordonate.builder().x(1).y(-2).build()).build());
+				pawns.add(Pawn.builder().color(pc).coordonate(Coordonate.builder().x(abs == 1 ? 0 : 2).y(2).build()).build());
 			}
 		}
 	}
