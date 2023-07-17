@@ -35,7 +35,7 @@ public class Triovision extends Application {
 		launch(args);
 	}
 
-	public void initPawns() {
+	private void initPawns() {
 		pawns = new ArrayList<>();
 		pawns.add(Pawn.builder().color(PawnColor.GREEN).coordonate(Coordonate.builder().x(1).y(0).build()).build());
 		pawns.add(Pawn.builder().color(PawnColor.GREEN).coordonate(Coordonate.builder().x(2).y(0).build()).build());
@@ -47,10 +47,11 @@ public class Triovision extends Application {
 		pawns.add(Pawn.builder().color(PawnColor.BLUE).coordonate(Coordonate.builder().x(2).y(3).build()).build());
 	}
 	
-	public void initPlayers() {
+	private void initPlayers() {
 		players = new ArrayList<>();
 		for (int i = 0; i < 2; i++) {
 			Player p = new Player();
+			p.setName("Player " + (i+1));
 			initCards(p);
 			players.add(p);
 		}
@@ -60,7 +61,7 @@ public class Triovision extends Application {
 	private void initCards(Player p) {
 		List<Card> cards = new ArrayList<>();
 		for (int i = 0; i < 6; i++) {
-			cards.add(new Card());
+			cards.add(new Card(true));
 		}
 		p.setCards(cards);
 	}
