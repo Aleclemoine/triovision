@@ -157,7 +157,7 @@ public class TrivisionGrid {
 					
 					pawnGrid.add(c, pawn.getCoordonate().getX(), pawn.getCoordonate().getY());
 
-					// TODO: check if anyOne win
+					// check if anyOne win
 					for (Entry<Player, VBox> entry : playersTable.entrySet()) {
 						Player pl = entry.getKey();
 						if (isMatchingCard(pl)) {
@@ -185,7 +185,7 @@ public class TrivisionGrid {
 						}
 					}
 				} else {
-					// TODO: Message "You must do a valid move !"
+					// TODO: Message "You must do a valid move !" ?
 				}
 			});
 			pawnGrid.add(circle, pawn.getCoordonate().getX(), pawn.getCoordonate().getY());
@@ -200,8 +200,6 @@ public class TrivisionGrid {
 				.collect(Collectors.toList());
 
 		for (Pawn candidate : collectFirsPawnOfGrid) {
-			Coordonate c = candidate.getCoordonate();
-			
 			// check the second pawn of the possibility (2 colors of each)
 			Pawn secondPlayerPawn = pl.getCards().get(0).getPawns().get(1);
 			Pawn thirdPlayerPawn = pl.getCards().get(0).getPawns().get(2);
