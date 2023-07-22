@@ -136,60 +136,63 @@ public class TrivisionGrid {
 				double offsetX = t.getSceneX() - orgSceneX;
 				double offsetY = t.getSceneY() - orgSceneY;
 
-//				System.out.println("offsetX : " + Math.round(offsetX / 100));
-//				System.out.println("offsetY : " + Math.round(offsetY / 100));
-
 				Circle c = (Circle) (t.getSource());
 
 				// I minus 100 because the circle is 50 radius and with a round, it s working well !
 				int newX = (int) (pawn.getCoordonate().getX() + Math.round(offsetX / 100));
 				int newY = (int) (pawn.getCoordonate().getY() + Math.round(offsetY / 100));
-				Coordonate newCoordonate = Coordonate.builder().x(newX).y(newY).build();
-				boolean isPawnAtTheSamePlace = false;
-				for (Pawn pawn2 : pawns) {
-					if (pawn2.isAtTheSamePlace(newCoordonate)) {
-						isPawnAtTheSamePlace = true;
-						break;
-					}
-				}
-				if (!isPawnAtTheSamePlace) {
-					
-					pawn.getCoordonate().setX(newX);
-					pawn.getCoordonate().setY(newY);
-
-					pawnGrid.getChildren().remove(c);
-					
-					pawnGrid.add(c, pawn.getCoordonate().getX(), pawn.getCoordonate().getY());
-
-					// check if anyOne win
-					for (Entry<Player, VBox> entry : playersTable.entrySet()) {
-						Player pl = entry.getKey();
-						if (isMatchingCard(pl)) {
-							pl.getCards().remove(0);
-							VBox vPlayerBox = entry.getValue();
-							if (CollectionUtils.isEmpty(pl.getCards())) {
-								Label remainingCards = (Label) vPlayerBox.getChildren().get(2);
-								remainingCards.setText(String.format(FORMAT_REMAINING_CARDS, pl.getCards().size()));
-								Dialog<String> dialog = new Dialog<String>();
-								dialog.setTitle("Congrats");
-							    dialog.setHeaderText(String.format("The winner is %s", pl.getName()));
-							    dialog.setContentText("Thank you for playing");
-							    ButtonType type = new ButtonType("Ok", ButtonData.OK_DONE);
-							    dialog.getDialogPane().getButtonTypes().add(type);
-							    dialog.setOnHidden(e -> Platform.exit());
-							    dialog.showAndWait();
-							} else {
-								GridPane gridPane = (GridPane) vPlayerBox.getChildren().get(1);
-								ObservableList<Node> children = gridPane.getChildren();
-								gridPane.getChildren().removeAll(children);
-								displayCard(gridPane, pl.getCards());
-								Label remainingCards = (Label) vPlayerBox.getChildren().get(2);
-								remainingCards.setText(String.format(FORMAT_REMAINING_CARDS, pl.getCards().size()));
-							}
+//				System.out.println("newX : " + newX);
+//				System.out.println("newY : " + newY);
+				if (newX < 0 || newX >= 4 || newY < 0 || newY >= 4) {
+					// TODO: Message "You must do a valid move !" ?
+				} else {
+					Coordonate newCoordonate = Coordonate.builder().x(newX).y(newY).build();
+					boolean isPawnAtTheSamePlace = false;
+					for (Pawn pawn2 : pawns) {
+						if (pawn2.isAtTheSamePlace(newCoordonate)) {
+							isPawnAtTheSamePlace = true;
+							break;
 						}
 					}
-				} else {
-					// TODO: Message "You must do a valid move !" ?
+					if (!isPawnAtTheSamePlace) {
+						
+						pawn.getCoordonate().setX(newX);
+						pawn.getCoordonate().setY(newY);
+	
+						pawnGrid.getChildren().remove(c);
+						
+						pawnGrid.add(c, pawn.getCoordonate().getX(), pawn.getCoordonate().getY());
+	
+						// check if anyOne win
+						for (Entry<Player, VBox> entry : playersTable.entrySet()) {
+							Player pl = entry.getKey();
+							if (isMatchingCard(pl)) {
+								pl.getCards().remove(0);
+								VBox vPlayerBox = entry.getValue();
+								if (CollectionUtils.isEmpty(pl.getCards())) {
+									Label remainingCards = (Label) vPlayerBox.getChildren().get(2);
+									remainingCards.setText(String.format(FORMAT_REMAINING_CARDS, pl.getCards().size()));
+									Dialog<String> dialog = new Dialog<String>();
+									dialog.setTitle("Congrats");
+								    dialog.setHeaderText(String.format("The winner is %s", pl.getName()));
+								    dialog.setContentText("Thank you for playing");
+								    ButtonType type = new ButtonType("Ok", ButtonData.OK_DONE);
+								    dialog.getDialogPane().getButtonTypes().add(type);
+								    dialog.setOnHidden(e -> Platform.exit());
+								    dialog.showAndWait();
+								} else {
+									GridPane gridPane = (GridPane) vPlayerBox.getChildren().get(1);
+									ObservableList<Node> children = gridPane.getChildren();
+									gridPane.getChildren().removeAll(children);
+									displayCard(gridPane, pl.getCards());
+									Label remainingCards = (Label) vPlayerBox.getChildren().get(2);
+									remainingCards.setText(String.format(FORMAT_REMAINING_CARDS, pl.getCards().size()));
+								}
+							}
+						}
+					} else {
+						// TODO: Message "You must do a valid move !" ?
+					}
 				}
 			});
 			pawnGrid.add(circle, pawn.getCoordonate().getX(), pawn.getCoordonate().getY());
