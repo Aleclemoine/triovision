@@ -14,6 +14,7 @@ import com.isep.hpah.triovision.Pawn;
 import com.isep.hpah.triovision.Pawn.PawnColor;
 import com.isep.hpah.triovision.Player;
 
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -30,7 +31,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
-import javafx.scene.text.Text;
 import lombok.Data;
 
 @Data
@@ -115,6 +115,12 @@ public class TrivisionGrid {
 	}
 
 	private void displayGrid(GridPane pawnGrid) {
+		for (int x = 0; x < 4; x++) {
+			for (int y = 0; y < 4; y++) {
+				Circle circle = new Circle(50, Paint.valueOf("WHITE"));
+				pawnGrid.add(circle, x, y);
+			}
+		}
 		for (Pawn pawn : pawns) {
 			Circle circle = new Circle(50, Paint.valueOf(pawn.getColor().toString()));
 			circle.setCursor(Cursor.HAND);
@@ -147,8 +153,6 @@ public class TrivisionGrid {
 					}
 				}
 				if (!isPawnAtTheSamePlace) {
-					// add a fake 
-					pawnGrid.add(new Text(""), pawn.getCoordonate().getX(), pawn.getCoordonate().getY());
 					
 					pawn.getCoordonate().setX(newX);
 					pawn.getCoordonate().setY(newY);
@@ -172,7 +176,7 @@ public class TrivisionGrid {
 							    dialog.setContentText("Thank you for playing");
 							    ButtonType type = new ButtonType("Ok", ButtonData.OK_DONE);
 							    dialog.getDialogPane().getButtonTypes().add(type);
-							    dialog.setOnHidden(e -> System.exit(0));
+							    dialog.setOnHidden(e -> Platform.exit());
 							    dialog.showAndWait();
 							} else {
 								GridPane gridPane = (GridPane) vPlayerBox.getChildren().get(1);
